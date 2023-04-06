@@ -6,4 +6,6 @@
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="enter_first_number">Enter first number</string>
+    <string name="correct">Correct</string>
+    <string name="incorect">Incorect</string>
 </resources>
