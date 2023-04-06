@@ -15,6 +15,7 @@
         android:layout_marginEnd="32dp"
         android:inputType="number"
         android:hint="@string/enter_first_number"
+        android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,6 +50,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:inputType="number"
+        android:saveEnabled="false"
         android:hint="@string/enter_second_number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/rezultat"
+        android:saveEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/secondNumberEditText" />
