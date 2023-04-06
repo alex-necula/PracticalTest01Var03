@@ -5,8 +5,12 @@ import static lab03.eim.systems.cs.pub.ro.practicaltest01var03.PracticalTest01Va
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +27,17 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
     private TextView resultTextView;
     private String firstNumber, secondNumber, result;
 
+    private final BroadcastReceiver messageBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            String message = intent.getStringExtra(PracticalTest01Var03Service.BROADCAST_MESSAGE);
+
+            if (PracticalTest01Var03Service.ACTION_DIFF.equals(action)) {
+                Log.d("PracticalTest01Var03MainActivity", "Received message: " + message);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +57,7 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 int secondNumber = Integer.parseInt(secondNumberEditText.getText().toString());
                 int result = firstNumber + secondNumber;
                 resultTextView.setText(firstNumber + " + " + secondNumber + " = " + result);
+                startService(getServiceIntent(firstNumber, secondNumber));
             } else {
                 Toast.makeText(PracticalTest01Var03MainActivity.this, "Both numbers should be set.", Toast.LENGTH_SHORT).show();
             }
@@ -53,6 +69,7 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 int secondNumber = Integer.parseInt(secondNumberEditText.getText().toString());
                 int result = firstNumber - secondNumber;
                 resultTextView.setText(firstNumber + " - " + secondNumber + " = " + result);
+                startService(getServiceIntent(firstNumber, secondNumber));
             } else {
                 Toast.makeText(PracticalTest01Var03MainActivity.this, "Both numbers should be set.", Toast.LENGTH_SHORT).show();
             }
@@ -68,6 +85,10 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
                 Toast.makeText(PracticalTest01Var03MainActivity.this, "Both numbers should be set.", Toast.LENGTH_SHORT).show();
             }
         });
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(PracticalTest01Var03Service.ACTION_DIFF);
+        registerReceiver(messageBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -103,5 +124,18 @@ public class PracticalTest01Var03MainActivity extends AppCompatActivity {
             }
             Toast.makeText(PracticalTest01Var03MainActivity.this, message, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(messageBroadcastReceiver);
+    }
+
+    private Intent getServiceIntent(int firstNumber, int secondNumber) {
+        Intent serviceIntent = new Intent(PracticalTest01Var03MainActivity.this, PracticalTest01Var03Service.class);
+        serviceIntent.putExtra("firstNumber", firstNumber);
+        serviceIntent.putExtra("secondNumber", secondNumber);
+        return serviceIntent;
     }
 }
